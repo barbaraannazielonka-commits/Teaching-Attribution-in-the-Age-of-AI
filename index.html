@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Credit Where It’s Due: Attribution in the Age of AI</title>
+<style>
+:root{--bg:#f5f7fb;--surface:#fff;--ink:#14213d;--muted:#4b5672;--line:#d5dbe8;--mark:#ffe066;--yours:#0f766e;--source:#1d4ed8;--ai:#7c3aed;--disc:#c2410c;--ok:#0f766e;--bad:#b42318;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#0e1424;--surface:#172036;--ink:#eef1f8;--muted:#a9b3cc;--line:#2c3856;--mark:#7a6a12;--yours:#4fd1c0;--source:#8fb0ff;--ai:#c4a8ff;--disc:#ffa275;--ok:#4fd1c0;--bad:#ff8a80}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#0e1424;--surface:#172036;--ink:#eef1f8;--muted:#a9b3cc;--line:#2c3856;--mark:#7a6a12;--yours:#4fd1c0;--source:#8fb0ff;--ai:#c4a8ff;--disc:#ffa275;--ok:#4fd1c0;--bad:#ff8a80}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+h1,h2,h3{font-family:Georgia,"Iowan Old Style","Times New Roman",serif;line-height:1.15;margin:0 0 .5em}
+h1{font-size:clamp(2.2rem,6vw,3.8rem);letter-spacing:-.02em}
+h2{font-size:clamp(1.6rem,4vw,2.2rem)}
+h3{font-size:1.2rem}
+main{max-width:860px;margin:0 auto;padding:0 20px}
+section{padding:56px 0 8px}
+p{max-width:68ch}
+.lede{font-size:1.15rem;color:var(--muted)}
+mark{background:var(--mark);color:inherit;padding:0 .15em}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--source);outline-offset:2px}
+.chip{display:inline-block;font-size:.85rem;font-weight:700;padding:2px 10px;border-radius:99px;border:2px solid currentColor}
+.t-yours{color:var(--yours)}.t-source{color:var(--source)}.t-ai{color:var(--ai)}.t-disc{color:var(--disc)}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}
+.doc{font-family:Georgia,serif;font-size:1.2rem;line-height:1.9}
+.s{background:none;border:0;border-bottom:3px dotted var(--muted);padding:0;text-align:left;font:inherit;color:inherit}
+.s:hover{background:var(--mark)}
+.s.done{border-bottom:3px solid currentColor}
+#reveal{min-height:5.5em;margin-top:14px;padding:14px 16px;border-left:6px solid var(--line);background:var(--bg);border-radius:6px}
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin:14px 0}
+.opt{background:var(--surface);border:2px solid var(--line);border-radius:10px;padding:10px 12px;text-align:left;font-weight:600}
+.opt:hover:not(:disabled){border-color:var(--ink)}
+.opt.right{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,var(--surface))}
+.opt.wrong{border-color:var(--bad)}
+.fb{padding:12px 14px;border-radius:8px;background:var(--bg);margin-top:8px}
+.bar{height:8px;background:var(--line);border-radius:9px;overflow:hidden;margin-bottom:16px}
+.bar i{display:block;height:100%;background:var(--ink);width:0;transition:width .3s}
+label{display:block;font-weight:600;margin:12px 0 4px}
+input,select,textarea{width:100%;font:inherit;padding:9px 11px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0 16px}
+.out{font-family:Georgia,serif;background:var(--bg);border:1px dashed var(--muted);border-radius:8px;padding:12px 14px;margin:6px 0 4px;word-break:break-word}
+.btn{background:var(--ink);color:var(--bg);border:0;border-radius:8px;padding:9px 16px;font-weight:700}
+.btn.alt{background:none;color:var(--ink);border:2px solid var(--ink)}
+.sift{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}
+.sift button{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px;text-align:left}
+.sift button[aria-expanded=true]{border-color:var(--ink)}
+.sift b{display:block;font-size:1.05rem}
+.sift span{display:none;margin-top:6px;font-size:.95rem;color:var(--muted)}
+.sift button[aria-expanded=true] span{display:block}
+.fake{font-family:Georgia,serif;line-height:2}
+.flag{background:none;border:0;border-bottom:3px dotted var(--bad);padding:0;font:inherit;color:inherit}
+.flag.on{background:color-mix(in srgb,var(--bad) 16%,transparent);border-bottom-style:solid}
+.checks label{font-weight:500;display:flex;gap:10px;align-items:flex-start;margin:8px 0}
+.checks input{width:auto;margin-top:6px}
+footer{margin-top:64px;padding:32px 0 48px;border-top:1px solid var(--line);color:var(--muted);font-size:.95rem}
+.hero{padding-top:40px}
+.theme{position:absolute;right:16px;top:calc(12px + env(safe-area-inset-top,0px));background:none;border:1px solid var(--line);border-radius:99px;padding:4px 12px;font-size:.85rem}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.bar i{transition:none}}
+</style>
+</head>
+<body>
+<button class="theme" id="theme" aria-label="Toggle light or dark theme">Theme</button>
+<main>
+
+<section class="hero">
+<h1>Credit where it’s due.</h1>
+<p class="lede">Attribution means telling readers where your ideas, facts, words, and help came from. AI tools make it easier to get text and images in seconds, and easier to lose track of who or what made them. Try it on a real paragraph.</p>
+<h2 style="margin-top:1.2em">Tap each sentence in this student paragraph</h2>
+<p class="lede" style="margin-top:0">Decide what it needs, then see if you’re right. Every sentence falls into one of four groups.</p>
+<div class="legend" aria-label="Legend">
+<span class="chip t-yours">Yours</span><span class="chip t-source">Find the original source</span><span class="chip t-ai">Cite the AI</span><span class="chip t-disc">Disclose the help</span>
+</div>
+<div class="card">
+<p class="doc" id="para"></p>
+<div id="reveal" aria-live="polite">Tap a sentence to see what it needs.</div>
+</div>
+</section>
+
+<section id="why">
+<h2>Why this matters more now</h2>
+<p><mark>Attribution does three jobs.</mark> It gives credit to people whose work you used. It lets readers check your claims. And it shows which thinking is yours, which is how a teacher can tell what you’ve learned.</p>
+<p>AI adds a fourth problem: <b>chatbots can state false things with total confidence, including made-up sources.</b> In 2023, lawyers in the U.S. federal case <i>Mata v. Avianca</i> filed a brief citing court cases that a chatbot had invented, and the judge sanctioned them. The lesson isn’t “never use AI.” It’s that <b>you are responsible for every claim you hand in</b>, no matter where it came from.</p>
+</section>
+
+<section id="sort">
+<h2>Where does the credit go?</h2>
+<p class="lede">Five situations. Pick the best fit.</p>
+<div class="card">
+<div class="bar"><i id="pbar"></i></div>
+<h3 id="qtext"></h3>
+<div class="opts" id="qopts"></div>
+<div id="qfb" aria-live="polite"></div>
+<button class="btn alt" id="qnext" hidden>Next</button>
+</div>
+</section>
+
+<section id="build">
+<h2>Build an AI citation</h2>
+<p class="lede">If your teacher says to cite AI, here are starter formats based on current APA and MLA guidance. Fill in what the tool showed you.</p>
+<div class="card">
+<div class="row">
+<div><label for="tool">Tool name</label><input id="tool" value="ChatGPT"></div>
+<div><label for="co">Company</label><input id="co" value="OpenAI"></div>
+<div><label for="ver">Model or version</label><input id="ver" placeholder="e.g. GPT-5 or the version label shown"></div>
+<div><label for="dt">Date you used it</label><input id="dt" type="date"></div>
+</div>
+<label for="url">Tool web address</label><input id="url" value="https://chatgpt.com">
+<label for="pr">Your prompt (what you typed)</label><textarea id="pr" rows="2" placeholder="Explain how the water cycle works in three sentences"></textarea>
+<h3 style="margin-top:1.2em">APA 7 reference</h3><div class="out" id="apa"></div>
+<h3>APA in-text</h3><div class="out" id="apai"></div>
+<h3>MLA 9 works cited</h3><div class="out" id="mla"></div>
+<button class="btn" id="copy">Copy MLA and APA</button> <span id="copied" aria-live="polite"></span>
+<p style="font-size:.95rem;color:var(--muted)">Style guides keep updating their AI advice, and teachers may ask for something different. Check the latest guide and your class rules. Many guides also suggest saving your full chat, since a reader can’t open it.</p>
+</div>
+</section>
+
+<section id="verify">
+<h2>Check before you trust</h2>
+<p class="lede">A citation that looks right can still be wrong. Journalism educator Mike Caulfield’s <b>SIFT</b> method works well on AI output. Tap each move.</p>
+<div class="sift" id="sift"></div>
+<h3 style="margin-top:1.6em">Spot what to check</h3>
+<p>This is an <b>invented example</b> of what a chatbot might write. Tap every part you would verify.</p>
+<div class="card fake" id="fake"></div>
+<div id="fakefb" class="fb" aria-live="polite">0 of 4 found.</div>
+</section>
+
+<section id="doubt">
+<h2>When in doubt</h2>
+<p class="lede">Answer a few questions about your own work. Every path ends with a clear next step, and “Not sure” always leads to your teacher.</p>
+<div class="card" id="flow" aria-live="polite"></div>
+</section>
+
+<section id="myths">
+<h2>Myths and facts</h2>
+<p class="lede">Tap a myth to see what’s true.</p>
+<div class="sift" id="mf" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr))"></div>
+</section>
+
+<section id="statement">
+<h2>Write your AI-use note</h2>
+<p class="lede">Being open about help builds trust. Check what applies, fill in the details you can, and get a note you can adapt for an assignment. Leave a field blank if it doesn’t apply, and only write what is true.</p>
+<div class="card">
+<div class="checks" id="checks"></div>
+<div class="row">
+<div><label for="n_name">Your name</label><input id="n_name"></div>
+<div><label for="n_date">Date</label><input id="n_date" type="date"></div>
+</div>
+<label for="n_tool">Tool and version</label><input id="n_tool" placeholder="e.g. ChatGPT, GPT-5">
+<label for="n_kept">What did you keep, change, or reject?</label><textarea id="n_kept" rows="2" placeholder="I used its outline order but rewrote every sentence"></textarea>
+<label for="n_ver">How did you check its information?</label><textarea id="n_ver" rows="2" placeholder="I compared its claims with two articles and the original report"></textarea>
+<label for="n_err">Any mistakes you caught?</label><textarea id="n_err" rows="2" placeholder="It gave a source that I couldn’t find, so I left it out"></textarea>
+<label for="n_ref">Reflection: did it help your learning?</label><textarea id="n_ref" rows="2" placeholder="It helped me get started, but I learned more when I explained it myself"></textarea>
+<div class="checks">
+<label><input type="checkbox" id="n_perm">My teacher permitted this use for this assignment.</label>
+<label><input type="checkbox" id="n_saved">I saved my prompts and chat and can share them.</label>
+</div>
+<h3 style="margin-top:1em">Your note</h3>
+<div class="out" id="note">Select at least one option.</div>
+<button class="btn" id="copy2">Copy note</button> <span id="copied2" aria-live="polite"></span>
+</div>
+</section>
+
+<footer>
+<h3>Where this content comes from</h3>
+<p>Citation formats follow guidance published by the APA Style team (apastyle.apa.org), the MLA Style Center (style.mla.org), and the Chicago Manual of Style (chicagomanualofstyle.org). SIFT was created by Mike Caulfield (Washington State University Vancouver). <i>Mata v. Avianca</i> is a 2023 case in the U.S. District Court, Southern District of New York. The finding on AI detectors comes from Liang et al., “GPT detectors are biased against non-native English writers,” <i>Patterns</i> (2023). Detector research keeps developing, so look for recent sources. Style rules change, so confirm details on those sites.</p>
+<p><b>Your teacher’s or school’s policy always comes first.</b> This site is for learning, not legal or disciplinary advice.</p>
+<p style="margin-top:1.5em;font-weight:600;color:var(--ink)">Nannestad High School – Barbara Anna Zielonka</p>
+</footer>
+</main>
+
+<script>
+(function(){
+var T={yours:["Yours","Your own opinion or conclusion needs no citation. Just make sure it really is your thinking.","t-yours"],source:["Find the original source","A fact or statistic needs a source. If AI gave it to you, don’t cite the AI as proof. Verify it, then cite the original study, report, or article.","t-source"],ai:["Cite the AI","Words, images, or other material produced by an AI tool should be marked as such and cited, usually with quotation marks for exact text.","t-ai"],disc:["Disclose the help","When AI helped your process (ideas, outlines, feedback) but its words aren’t in your work, say how you used it if your teacher asks for that.","t-disc"]};
+function $(i){return document.getElementById(i)}
+
+// Theme
+var th=$("theme"),dark=matchMedia("(prefers-color-scheme:dark)").matches;
+th.onclick=function(){dark=!dark;document.documentElement.setAttribute("data-theme",dark?"dark":"light")};
+
+// Hero paragraph
+var S=[["I think school should start later.","yours"],["Teenagers’ body clocks tend to shift later during adolescence.","source"],["A chatbot gave me this line: “Sleep is the foundation of learning.”","ai"],["I asked an AI tool to help me outline this paragraph.","disc"],["After reading three articles, I believe sleep matters more than first period.","yours"]];
+var para=$("para"),seen=0;
+S.forEach(function(s,i){var b=document.createElement("button");b.className="s";b.textContent=s[0];b.onclick=function(){var t=T[s[1]];b.className="s done "+t[2];var r=$("reveal");r.style.borderLeftColor="currentColor";r.className=t[2];r.innerHTML="";var h=document.createElement("b");h.textContent=t[0]+": ";var p=document.createElement("span");p.style.color="var(--ink)";p.textContent=t[1];r.appendChild(h);r.appendChild(p)};para.appendChild(b);para.appendChild(document.createTextNode(" "))});
+
+// Sorter
+var Q=[
+["You paste a sentence written by a chatbot into your essay, in quotation marks.","ai","The text came from the tool, so the tool is the “author” to cite. Quotation marks show it isn’t your wording."],
+["You ask AI for topic ideas, then research and write everything yourself.","disc","None of its words are in your work, but it shaped your process. A short note is the honest move, if your class asks for one."],
+["AI tells you a statistic about teen sleep and you want to use it.","source","Chatbots can invent or garble numbers. Find the real report, confirm the number, and cite that."],
+["After reading three articles, you write your own conclusion.","yours","Your reasoning is yours. You still cite the three articles for anything you borrowed from them."],
+["You put an AI-generated image on a presentation slide.","ai","Label it as AI-generated and credit the tool, plus your prompt if possible. Readers should know it isn’t a photo or an artist’s work."]
+];
+var qi=0,score=0;
+function showQ(){
+ if(qi>=Q.length){$("qtext").textContent="You got "+score+" of "+Q.length+".";$("qopts").innerHTML="";$("qfb").innerHTML='<div class="fb">The pattern: <b>quote it, cite it; verify facts at the source; disclose help; own your thinking.</b> When rules are unclear, ask your teacher.</div>';$("qnext").textContent="Try again";$("qnext").hidden=false;qi=-1;$("pbar").style.width="100%";return}
+ $("pbar").style.width=(qi/Q.length*100)+"%";
+ $("qtext").textContent=Q[qi][0];$("qfb").innerHTML="";$("qnext").hidden=true;
+ var o=$("qopts");o.innerHTML="";
+ Object.keys(T).forEach(function(k){var b=document.createElement("button");b.className="opt";b.textContent=T[k][0];b.onclick=function(){
+  var ok=k===Q[qi][1];if(ok)score++;
+  Array.prototype.forEach.call(o.children,function(c){c.disabled=true});
+  b.classList.add(ok?"right":"wrong");
+  if(!ok)Array.prototype.forEach.call(o.children,function(c){if(c.textContent===T[Q[qi][1]][0])c.classList.add("right")});
+  $("qfb").innerHTML="";var d=document.createElement("div");d.className="fb";d.textContent=(ok?"Right. ":"Not quite. ")+Q[qi][2];$("qfb").appendChild(d);
+  $("qnext").textContent=qi===Q.length-1?"See result":"Next";$("qnext").hidden=false};o.appendChild(b)});
+}
+$("qnext").onclick=function(){if(qi===-1){qi=0;score=0}else qi++;showQ()};
+showQ();
+
+// Citation builder
+var M=["Jan.","Feb.","Mar.","Apr.","May","June","July","Aug.","Sept.","Oct.","Nov.","Dec."];
+var today=new Date();$("dt").value=today.toISOString().slice(0,10);
+function build(){
+ var tool=$("tool").value.trim()||"[Tool]",co=$("co").value.trim()||"[Company]",ver=$("ver").value.trim(),url=$("url").value.trim(),pr=$("pr").value.trim();
+ var d=$("dt").value?new Date($("dt").value+"T12:00:00"):today,yr=d.getFullYear();
+ $("apa").textContent=co+". ("+yr+"). "+tool+(ver?" ("+ver+")":"")+" [Large language model]. "+url;
+ $("apai").textContent="(“"+co+", "+yr+")".replace("“","");
+ $("apai").textContent="("+co+", "+yr+"). Tip: also describe your prompt in your text.";
+ $("mla").textContent=(pr?"“"+pr+"” prompt. ":"")+tool+(ver?", "+ver:"")+", "+co+", "+d.getDate()+" "+M[d.getMonth()]+" "+yr+(url?", "+url.replace(/^https?:\/\//,""):"")+".";
+}
+["tool","co","ver","dt","url","pr"].forEach(function(i){$(i).oninput=build});build();
+function copy(txt,el){try{navigator.clipboard.writeText(txt).then(function(){el.textContent="Copied";setTimeout(function(){el.textContent=""},1800)},function(){el.textContent="Select and copy the text above."})}catch(e){el.textContent="Select and copy the text above."}}
+$("copy").onclick=function(){copy("APA: "+$("apa").textContent+"\nMLA: "+$("mla").textContent,$("copied"))};
+
+// SIFT
+var SF=[["Stop","Pause before using or sharing it. Ask: do I know this source, and is it reliable?"],["Investigate the source","Who made this claim? Look up the author, journal, or site separately. Does it exist, and is it respected?"],["Find better coverage","Search for the claim elsewhere. Do trusted sources agree?"],["Trace to the original","Click through to the original study or document. Does it really say what was claimed?"]];
+var sf=$("sift");SF.forEach(function(s){var b=document.createElement("button");b.setAttribute("aria-expanded","false");var h=document.createElement("b");h.textContent=s[0];var p=document.createElement("span");p.textContent=s[1];b.appendChild(h);b.appendChild(p);b.onclick=function(){b.setAttribute("aria-expanded",b.getAttribute("aria-expanded")==="false")};sf.appendChild(b)});
+
+// Spot the flags
+var F=[["Studies show that 92% of teens ","A precise number with no study named. Which studies? Find the original."],["sleep better with later start times.","A strong claim. Do the sources actually say this, or only something close?"],[" (Hargrove & Obi, 2021, ","These authors are invented for this example. Always search for the authors to confirm they exist."],["Journal of Adolescent Learning Habits, 14(2), 55–71).","A real-looking journal name and page range. Confirm the journal exists and the article appears in it."]];
+var fk=$("fake"),fnd=0;
+F.forEach(function(f){var b=document.createElement("button");b.className="flag";b.textContent=f[0];b.onclick=function(){if(!b.classList.contains("on")){b.classList.add("on");fnd++}$("fakefb").textContent=fnd+" of 4 found. "+f[1]};fk.appendChild(b)});
+
+// Flowchart
+var FL=[["Has your teacher said AI is allowed for this assignment?",1,"noai"],["Does any text or image made by AI appear in your finished work?","cite",2],["Are you using a fact, number, or source that AI gave you?","verify",3],["Did AI help you with ideas, an outline, or feedback?","disclose","own"]];
+var FO={noai:["Don’t use AI for this task","If you already have, tell your teacher before you hand it in. Being honest early is far better than being found out later.","t-disc"],ask:["Ask your teacher","Rules differ between classes and assignments, so your teacher decides. Ask before you hand in, and bring a specific question, such as “May I use AI to get feedback on my draft?”","t-source"],cite:["Cite the AI","Put exact AI wording in quotation marks and cite the tool. Label AI-generated images as such. The citation builder above shows the format.","t-ai"],verify:["Find the original source","Don’t cite the chatbot as proof. Look up the real study or report, confirm it says what the AI claimed, and cite that. If you can’t find it, leave the claim out.","t-source"],disclose:["Disclose the help","Add a short AI-use note if your teacher asks for one. The note builder below makes one.","t-disc"],own:["It’s your work","You don’t need to cite your own thinking. Still cite any articles, books, or sites you used.","t-yours"]};
+var cur=0,trail=[];
+function flow(){var f=$("flow");f.innerHTML="";
+ trail.forEach(function(t){var p=document.createElement("p");p.style.cssText="margin:0 0 6px;color:var(--muted);font-size:.95rem";p.textContent=t;f.appendChild(p)});
+ var h=document.createElement("h3");
+ if(typeof cur==="number"){h.textContent=FL[cur][0];f.appendChild(h);var o=document.createElement("div");o.className="opts";
+  [["Yes",FL[cur][1]],["No",FL[cur][2]],["Not sure","ask"]].forEach(function(a){var b=document.createElement("button");b.className="opt";b.textContent=a[0];b.onclick=function(){trail.push(FL[cur][0]+" "+a[0]);cur=a[1];flow()};o.appendChild(b)});f.appendChild(o)}
+ else{var r=FO[cur];h.textContent=r[0];h.className=r[2];f.appendChild(h);var p=document.createElement("p");p.textContent=r[1];f.appendChild(p);
+  if(cur!=="ask"){var q=document.createElement("p");q.style.color="var(--muted)";q.textContent="Still unsure? Ask your teacher.";f.appendChild(q)}
+  var s=document.createElement("button");s.className="btn alt";s.textContent="Start over";s.onclick=function(){cur=0;trail=[];flow()};f.appendChild(s)}}
+flow();
+
+// Myths
+var MF=[["If I rewrite AI text in my own words, it’s mine.","Changing the wording doesn’t erase where the ideas, facts, or structure came from. If they came from AI or another source, credit them the way your teacher asks."],["AI detectors can prove who wrote something.","No detector can prove authorship. They estimate a probability and can be wrong in both directions. In a 2023 Stanford study (Liang et al.), seven detectors wrongly labelled about 61% of TOEFL essays by non-native English writers as AI-generated, and simple rewording could fool them. Companies dispute some findings and tools keep changing, but a score alone is not proof. OpenAI shut down its own AI-text detector in 2023 because of low accuracy. A fair review looks at drafts, notes, and a conversation with the writer."],["If a chatbot gives a source, it must exist.","Chatbots can invent sources that look real, as in the Mata v. Avianca case. Search for the title and authors yourself, and open the original."],["If AI wrote it, nobody owns it, so I don’t need to credit it.","Legal ownership of AI output is still being worked out, but crediting isn’t only about law. Readers deserve to know who or what produced the words, and style guides ask you to cite AI."],["Citing or disclosing AI means I did something wrong.","Not when the use is allowed. Being open shows responsible use. If AI isn’t allowed for the task, the answer is to ask first, not to hide it."],["If a detector flags my work, there’s nothing I can do.","Keep your notes, drafts, and version history as you write, and offer to explain your work in your own words. That shows your process far better than any score."]];
+var mf=$("mf");MF.forEach(function(m){var b=document.createElement("button");b.setAttribute("aria-expanded","false");var h=document.createElement("b");h.textContent="Myth: "+m[0];var p=document.createElement("span");p.textContent="Fact: "+m[1];b.appendChild(h);b.appendChild(p);b.onclick=function(){b.setAttribute("aria-expanded",b.getAttribute("aria-expanded")==="false")};mf.appendChild(b)});
+
+// Statement
+var C=[["I used AI to brainstorm topic ideas.","brainstorm topic ideas"],["I used AI to explain a concept I was stuck on.","explain a concept I was stuck on"],["I used AI to get feedback on my draft.","give feedback on my draft"],["I checked grammar and spelling with an AI tool.","check grammar and spelling"],["I included AI-generated text or images (cited in my work).","produce text or images that I quoted and cited"]];
+var ck=$("checks");C.forEach(function(c,i){var l=document.createElement("label");var x=document.createElement("input");x.type="checkbox";x.onchange=note;l.appendChild(x);l.appendChild(document.createTextNode(c[0]));ck.appendChild(l)});
+function v(i){return $(i).value.trim().replace(/[.\s]+$/,"")}
+function note(){var a=[];Array.prototype.forEach.call(ck.querySelectorAll("input"),function(x,i){if(x.checked)a.push(C[i][1])});
+ if(!a.length){$("note").textContent="Select at least one option.";return}
+ var d=$("n_date").value?new Date($("n_date").value+"T12:00:00"):null,t="AI use statement";
+ if(v("n_name"))t+=" – "+v("n_name");
+ if(d)t+=", "+d.getDate()+" "+M[d.getMonth()]+" "+d.getFullYear();
+ t+=". I used "+(v("n_tool")||"an AI tool")+" to "+(a.length>1?a.slice(0,-1).join(", ")+", and "+a[a.length-1]:a[0])+".";
+ if(v("n_kept"))t+=" What I kept, changed, or rejected: "+v("n_kept")+".";
+ if(v("n_ver"))t+=" How I checked its information: "+v("n_ver")+".";
+ if(v("n_err"))t+=" Mistakes I caught: "+v("n_err")+".";
+ if($("n_perm").checked)t+=" My teacher permitted this use for this assignment.";
+ if($("n_saved").checked)t+=" I saved my prompts and chat and can share them on request.";
+ t+=" The final argument, writing, and conclusions are my own"+(a.indexOf(C[4][1])>-1?", except for material I quoted and cited":"")+".";
+ if(v("n_ref"))t+=" Reflection: "+v("n_ref")+".";
+ $("note").textContent=t}
+["n_name","n_date","n_tool","n_kept","n_ver","n_err","n_ref","n_perm","n_saved"].forEach(function(i){$(i).oninput=note;$(i).onchange=note});
+$("n_date").value=today.toISOString().slice(0,10);
+$("copy2").onclick=function(){copy($("note").textContent,$("copied2"))};
+})();
+</script>
+</body>
+</html>
